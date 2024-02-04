@@ -1,0 +1,10 @@
+---
+
+
+- name: Install webserver
+  hosts: web
+  remote_user: std004
+  become: true
+
+  roles:
+    - wordpress
