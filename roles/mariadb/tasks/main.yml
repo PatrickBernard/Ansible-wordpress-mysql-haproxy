@@ -26,5 +26,5 @@
     dest: "{{ path_to_mariadb_conf }}"
     section: mysqld
     option: bind-address
-    value: "{{ sql_bind_address }}"
+    value: "{{ db_host }}"
   notify: restart_mariadb
