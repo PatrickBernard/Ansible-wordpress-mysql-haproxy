@@ -8,6 +8,12 @@
       - mariadb-server
       - mariadb-client
 
+- name: Start mariadb
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true
+
 - name: Create wordpress database
   community.mysql.mysql_db:
     name: "{{ db_name }}"

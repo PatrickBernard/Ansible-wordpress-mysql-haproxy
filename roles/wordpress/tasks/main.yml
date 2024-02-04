@@ -84,4 +84,25 @@
     path: "{{ web_path }}{{ wordpress_file_path }}"
     regexp: '^(.*)localhost(.*)$'
     line: "define( 'DB_HOST', '{{ db_host }}' );"
-    notify: restart_apache
+  notify: restart_apache
+
+- name: delete lines in wp-config.php
+  ansible.builtin.replace:
+    path: "{{ web_path }}{{ wordpress_file_path }}"
+    regexp: "(.*)put your unique phrase here(.*)"
+      
+- name: Download salt file 
+  ansible.builtin.get_url:
+    url: https://api.wordpress.org/secret-key/1.1/salt
+    dest: "/tmp/salt.txt"
+      
+- name: Get contents of salt file 
+  ansible.builtin.slurp:
+    src: "/tmp/salt.txt" 
+  register: r_salts_content
+      
+- name: Append salt file content to wp-config.php
+  ansible.builtin.blockinfile:
+    path: "{{ web_path }}{{ wordpress_file_path }}"
+    block: "{{ r_salts_content['content'] | b64decode }}"
+    insertafter: "EOF"
