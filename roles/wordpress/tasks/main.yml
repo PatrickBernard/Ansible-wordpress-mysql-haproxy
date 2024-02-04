@@ -106,3 +106,19 @@
     path: "{{ web_path }}{{ wordpress_file_path }}"
     block: "{{ r_salts_content['content'] | b64decode }}"
     insertafter: "EOF"
+
+- name: Create httpd virtual host
+  ansible.builtin.template:
+    src: files/site.conf.j2
+    dest: "/etc/apache2/sites-available/{{ site_domain }}.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Enable config
+  ansible.builtin.command: a2ensite "{{ site_domain }}".conf
+  notify: restart_apache
+
+- name: Disable default config
+  ansible.builtin.command: a2dissite 000-default.conf
+  notify: restart_apache

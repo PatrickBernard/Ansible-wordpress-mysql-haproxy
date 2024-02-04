@@ -1,0 +1,37 @@
+<VirtualHost *:80>
+    ServerName {{ site_domain }}
+    ServerAlias www.{{ site_domain }}
+
+    ErrorLog /var/log/apache2/{{ site_domain }}-error.log
+    CustomLog /var/log/apache2/{{ site_domain }}-access.log combined
+
+    <Proxy "unix:{{ php_fpm_socket_path }}|fcgi://localhost/">
+        ProxySet disablereuse=off
+    </Proxy>
+
+    <FilesMatch \.php$>
+        SetHandler proxy:fcgi://localhost/
+    </FilesMatch>
+
+    DocumentRoot {{ web_path }}/wordpress
+    DirectoryIndex index.html index.php
+
+    TraceEnable Off
+
+    <Location "/status">
+        Order Allow,Deny
+        Allow from 127.0.0.1
+        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/status
+    </Location>
+
+    <Location "/fpm-ping">
+        ProxyPass unix:{{ php_fpm_socket_path }}|fcgi://localhost/fpm-ping
+    </Location>
+
+    <Directory {{ web_path }}/wordpress>
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+

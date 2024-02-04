@@ -12,4 +12,6 @@ wordpress_file_path: /wordpress/wp-config.php
 wordpress_file_default: /wordpress/wp-config-sample.php
 web_owner: www-data
 web_group: www-data
-web_path: /var/www/html/
+web_path: /var/www/html
+php_fpm_socket_path: /run/php/php-fpm.sock
+site_domain: test4.oc3n.net
