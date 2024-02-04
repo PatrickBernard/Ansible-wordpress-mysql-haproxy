@@ -31,3 +31,21 @@
   loop:
     - php8.2-fpm
   notify : restart_apache
+
+- name: Download wordpress
+  ansible.builtin.get_url:
+    url: "{{ wordpress_url }}"
+    dest: "{{ wordpress_path }}"
+    checksum: "{{ wordpress_md5 }}"
+  register: r_wordpress_directory
+  tags: dl_wp
+
+- name: Unarchive Wordpress
+  ansible.builtin.unarchive:
+    src: "{{ r_wordpress_directory.dest }}"
+    dest: "{{ web_path }}"
+    remote_src: yes
+    mode: 0775
+    owner: "{{ web_owner }}"
+    group: "{{ web_group }}"
+  tags: dl_wp

@@ -6,5 +6,13 @@
   remote_user: std004
   become: true
 
+  vars:
+    - wordpress_url: https://wordpress.org/wordpress-6.4.3.tar.gz
+    - wordpress_md5: "md5: 8e664626c12cb6daea37c8a90d8080d8"
+    - wordpress_path: /tmp
+    - web_owner: www-data
+    - web_group: www-data
+    - web_path: /var/www/html/
+
   roles:
     - wordpress
