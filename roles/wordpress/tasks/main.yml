@@ -1,0 +1,18 @@
+- name: Install Packages for wordpress / apache / php-fpm
+  ansible.builtin.apt:
+    pkg:
+      - apache2
+      - php
+      - php-fpm
+      - php-mbstring
+      - php-bcmath
+      - php-xml
+      - php-mysql
+      - php-common
+      - php-gd
+      - php-cli
+      - php-curl
+      - php-zip
+      - php-imagick
+      - php-ldap
+      - php-intl

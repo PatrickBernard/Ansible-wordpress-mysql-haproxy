@@ -1,0 +1,14 @@
+[all:vars]
+ansible_connection=ssh
+ansible_user=std004
+#ansible_ssh_pass=plop
+
+
+[sql]
+sqllab ansible_host=192.168.31.113
+
+[web]
+weblab ansible_host=192.168.31.112
+
+[proxy]
+proxylab ansible_host=192.168.31.111

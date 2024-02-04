@@ -1,0 +1,13 @@
+---
+
+# playbook init
+
+- name: Set authorized key taken from file
+  hosts: all
+  remote_user: std004
+
+  tasks:
+    - ansible.posix.authorized_key:
+        user: std004
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
