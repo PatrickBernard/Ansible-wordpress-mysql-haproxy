@@ -27,7 +27,7 @@
   notify : restart_apache
 
 - name: Enable conf for php-fpm
-  command: a2enconf "{{ item }}"
+  ansible.builtin.command: a2enconf "{{ item }}"
   loop:
     - php8.2-fpm
   notify : restart_apache
