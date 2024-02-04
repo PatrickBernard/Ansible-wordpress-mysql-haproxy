@@ -1,0 +1,30 @@
+---
+
+- name: Install mariadb
+  ansible.builtin.apt:
+    update_cache: true
+    pkg:
+      - python3-mysqldb
+      - mariadb-server
+      - mariadb-client
+
+- name: Create wordpress database
+  community.mysql.mysql_db:
+    name: "{{ db_name }}"
+    state: present
+
+- name: Create database user
+  community.mysql.mysql_user:
+      name: "{{ db_user }}"
+      password: "{{ db_user_password }}"
+      priv: '{{ db_name }}.*:ALL'
+      host: '%'
+      state: present
+
+- name: ensure mysql is configured to bind to the specified address
+  community.general.ini_file:
+    dest: "{{ path_to_mariadb_conf }}"
+    section: mysqld
+    option: bind-address
+    value: "{{ sql_bind_address }}"
+  notify: restart_mariadb

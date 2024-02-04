@@ -1,5 +1,8 @@
+---
+
 - name: Install Packages for wordpress / apache / php-fpm
   ansible.builtin.apt:
+    update_cache: true
     pkg:
       - apache2
       - php
