@@ -1,6 +1,6 @@
 ---
 
-- name: Install Packages for wordpress / apache / php-fpm
+- name: Install Packages For Wordpress, apache, php-fpm
   ansible.builtin.apt:
     update_cache: true
     pkg:
@@ -27,19 +27,26 @@
   loop:
     - proxy_fcgi
     - setenvif
-  notify : restart_apache
+  notify: restart_apache
 
 - name: Enable conf for php-fpm
-  ansible.builtin.command: a2enconf "{{ item }}"
-  loop:
-    - php8.2-fpm
-  notify : restart_apache
+  ansible.builtin.command: a2enconf php8.2-fpm
+  changed_when: false
+  when: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "12"
+  notify: restart_apache
+
+- name: Enable conf for php-fpm
+  ansible.builtin.command: a2enconf php7.4-fpm
+  changed_when: false
+  when: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "11"
+  notify: restart_apache
 
 - name: Download wordpress
   ansible.builtin.get_url:
     url: "{{ wordpress_url }}"
     dest: "{{ wordpress_path }}"
     checksum: "{{ wordpress_md5 }}"
+    mode: "0644"
   register: r_wordpress_directory
   tags: dl_wp
 
@@ -47,19 +54,20 @@
   ansible.builtin.unarchive:
     src: "{{ r_wordpress_directory.dest }}"
     dest: "{{ web_path }}"
-    remote_src: yes
-    mode: 0775
+    remote_src: true
     owner: "{{ web_owner }}"
     group: "{{ web_group }}"
+    mode: "0644"
   tags: dl_wp
 
 - name: Create wp-config.php file
-  ansible.builtin.copy: 
+  ansible.builtin.copy:
     src: "{{ web_path }}{{ wordpress_file_default }}"
     dest: "{{ web_path }}{{ wordpress_file_path }}"
-    remote_src: yes
+    remote_src: true
     owner: "{{ web_owner }}"
     group: "{{ web_group }}"
+    mode: "0644"
 
 - name: Configure wp-config.php file Database Name
   ansible.builtin.lineinfile:
@@ -86,21 +94,22 @@
     line: "define( 'DB_HOST', '{{ db_host }}' );"
   notify: restart_apache
 
-- name: delete lines in wp-config.php
+- name: Delete lines in wp-config.php
   ansible.builtin.replace:
     path: "{{ web_path }}{{ wordpress_file_path }}"
     regexp: "(.*)put your unique phrase here(.*)"
-      
-- name: Download salt file 
+
+- name: Download salt file
   ansible.builtin.get_url:
     url: https://api.wordpress.org/secret-key/1.1/salt
     dest: "/tmp/salt.txt"
-      
-- name: Get contents of salt file 
+    mode: "0644"
+
+- name: Get contents of salt file
   ansible.builtin.slurp:
-    src: "/tmp/salt.txt" 
+    src: "/tmp/salt.txt"
   register: r_salts_content
-      
+
 - name: Append salt file content to wp-config.php
   ansible.builtin.blockinfile:
     path: "{{ web_path }}{{ wordpress_file_path }}"
@@ -117,8 +126,10 @@
 
 - name: Enable config
   ansible.builtin.command: a2ensite "{{ site_domain }}".conf
+  changed_when: false
   notify: restart_apache
 
 - name: Disable default config
   ansible.builtin.command: a2dissite 000-default.conf
+  changed_when: false
   notify: restart_apache

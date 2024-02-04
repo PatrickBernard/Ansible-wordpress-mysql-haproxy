@@ -7,7 +7,8 @@
   remote_user: std004
 
   tasks:
-    - ansible.posix.authorized_key:
+    - name: Copy key
+      ansible.posix.authorized_key:
         user: std004
         state: present
         key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

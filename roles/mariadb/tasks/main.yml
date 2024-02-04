@@ -21,16 +21,17 @@
 
 - name: Create database user
   community.mysql.mysql_user:
-      name: "{{ db_user }}"
-      password: "{{ db_user_password }}"
-      priv: '{{ db_name }}.*:ALL'
-      host: '%'
-      state: present
+    name: "{{ db_user }}"
+    password: "{{ db_user_password }}"
+    priv: '{{ db_name }}.*:ALL'
+    host: '%'
+    state: present
 
-- name: ensure mysql is configured to bind to the specified address
+- name: Ensure mysql is configured to bind to the specified address
   community.general.ini_file:
     dest: "{{ path_to_mariadb_conf }}"
     section: mysqld
     option: bind-address
     value: "{{ db_host }}"
-  notify: restart_mariadb
+    mode: "0644"
+  notify: Restart_Mariadb
