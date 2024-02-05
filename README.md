@@ -14,9 +14,25 @@
 
 # Utilisation
 
-Remplir les variables d'inventaires pour correspondre aux cibles
+Depuis un serveur "bastion", Installer le projet
+```
+sudo apt update
+sudo apt install pipx git sshpass
+git clone git@github.com:PatrickBernard/test-oc3.git
+```
 
-Fichier inventories/cible/hosts
+Configuration ansible
+```
+pipx ensurepath
+pipx install --include-deps ansible
+pipx install yamllint
+pipx install ansible-lint
+pipx inject --include-apps ansible argcomplete
+ansible --version
+ansible-galaxy collection install -r requirements.yml
+```
+
+Remplir les variables d'inventaires pour correspondre aux cibles (exemple disponible dans inventories/labo )
 ```
 [all:vars]
 ansible_connection=ssh
