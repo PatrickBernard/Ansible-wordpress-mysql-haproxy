@@ -52,3 +52,32 @@ php_fpm_socket_path: /run/php/php-fpm.sock
 site_domain: domain.example
 apache_host: a.b.c.d
 ```
+
+Générer une clef ssh si nécéssaire 
+```
+ssh-keygen
+```
+Déposer les clefs
+```
+ansible-playbook -i inventories/cible 00-upload-keys.yml -k
+```
+Pour éviter de retaper la passphrase
+```
+ssh-agent bash
+ssh-add ~/.ssh/id_rsa
+```
+
+Déploiement sgbd
+```
+ansible-playbook -i inventories/labo 01-mariadb.yml -K
+```
+
+Déploiement Wordpress
+```
+ansible-playbook -i inventories/labo 02-webservers.yml -K
+```
+
+Déploiement haproxy
+```
+ansible-playbook -i inventories/labo 03-haproxy.yml -K
+```
