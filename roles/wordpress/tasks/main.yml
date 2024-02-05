@@ -41,24 +41,21 @@
   when: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "11"
   notify: Restart_Apache
 
-- name: Download wordpress
-  ansible.builtin.get_url:
-    url: "{{ wordpress_url }}"
-    dest: "{{ wordpress_path }}"
-    checksum: "{{ wordpress_md5 }}"
-    mode: "0644"
-  register: r_wordpress_directory
-  tags: dl_wp
+- name: Check Wordpress exist
+  ansible.builtin.stat:
+    path: "/var/www/html/wordpress/"
+  register: r_check_wordpress
 
 - name: Unarchive Wordpress
   ansible.builtin.unarchive:
-    src: "{{ r_wordpress_directory.dest }}"
+    src: "{{ wordpress_url }}"
     dest: "{{ web_path }}"
     remote_src: true
     owner: "{{ web_owner }}"
     group: "{{ web_group }}"
     mode: "0644"
-  tags: dl_wp
+  when: not r_check_wordpress.stat.exists
+  run_once: true
 
 - name: Create wp-config.php file
   ansible.builtin.copy:
@@ -118,7 +115,7 @@
 
 - name: Create httpd virtual host
   ansible.builtin.template:
-    src: files/site.conf.j2
+    src: templates/site.conf.j2
     dest: "/etc/apache2/sites-available/{{ site_domain }}.conf"
     owner: root
     group: root
