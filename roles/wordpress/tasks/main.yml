@@ -53,7 +53,7 @@
     remote_src: true
     owner: "{{ web_owner }}"
     group: "{{ web_group }}"
-    mode: "0644"
+    mode: "0755"
   when: not r_check_wordpress.stat.exists
   run_once: true
 
