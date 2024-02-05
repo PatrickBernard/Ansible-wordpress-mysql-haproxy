@@ -50,4 +50,5 @@ web_group: www-data
 web_path: /var/www/html
 php_fpm_socket_path: /run/php/php-fpm.sock
 site_domain: domain.example
+apache_host: a.b.c.d
 ```
