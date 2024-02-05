@@ -2,7 +2,7 @@
 
 ## serveur proxy :
 - Installation et configuration de Haproxy
--  Prise en charge du FQDN test4.oc3n.net
+- Prise en charge du FQDN test4.oc3n.net
 
 ## serveur web :
 - Installation et configuration de Apache2
@@ -16,7 +16,7 @@
 
 Remplir les variables d'inventaires pour correspondre aux cibles
 
-Fichier inventoriries/cible/hosts
+Fichier inventories/cible/hosts
 ```
 [all:vars]
 ansible_connection=ssh
