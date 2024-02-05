@@ -1,0 +1,13 @@
+---
+
+
+- name: Install haproxy
+  hosts: proxy
+  remote_user: std004
+  become: true
+
+  vars_files:
+    - vars/defaults.yml
+
+  roles:
+    - haproxy

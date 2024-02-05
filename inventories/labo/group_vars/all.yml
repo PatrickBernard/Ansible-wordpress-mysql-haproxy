@@ -15,3 +15,4 @@ web_group: www-data
 web_path: /var/www/html
 php_fpm_socket_path: /run/php/php-fpm.sock
 site_domain: test4.oc3n.net
+apache_host: 192.168.31.112
