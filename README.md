@@ -1,5 +1,7 @@
 # test-oc3
 
+Déployer une stack wordpress haproxy mysql
+
 ## serveur proxy :
 - Installation et configuration de Haproxy
 - Prise en charge du FQDN test4.oc3n.net
